@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" >
+   <head>
+    <link rel="stylesheet"
+      th:href="@{/css/bootstrap.min.css}"
+      href="../../css/bootstrap.min.css"/>  
+      
+     <script src="http://code.jquery.com/jquery-latest.js"></script>
+     <script src="../../js/bootstrap.min.js"></script>
+</head>
+  <body>
+    
+   <div th:fragment="footer">
+       
+       <p class="text-info" th:text=" 'Version: ' + ${version}"></p>
+       
+       <p class="text-info">
+       		<b>Powered By:</b> <br></br><br></br>
+      
+      </p>     
+      <div class="row">
+   			<div class="col-sm-6 col-md-1">
+      				<a href="http://www.spring.io">
+         				<img th:src="@{/img/spring.png}"/>
+      				</a>
+   			</div>
+   			
+   			<div class="col-sm-6 col-md-1">
+      				<a href="http://www.thymeleaf.org">
+         				<img th:src="@{/img/thymeleaf.png}"/>
+      				</a>
+   			</div>
+   			
+   			<div class="col-sm-6 col-md-1">
+      				<a href="http://tomcat.apache.org/">
+         				<img th:src="@{/img/tomcat.jpg}"/>
+      				</a>
+   			</div>
+	</div>
+      
+      
+    </div>
+  </body>
+</html>

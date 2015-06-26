@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+layout:decorator="layout">
+  <head>
+    <title>Service Tester</title>
+    <link rel="stylesheet"
+      th:href="@{/css/bootstrap.min.css}"
+      href="../../css/bootstrap.min.css"/>
+  
+   <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+  
+  <style type="text/css">
+  	#fade {
+	    display: none;
+	    position:absolute;
+	    top: 0%;
+	    left: 0%;
+	    width: 100%;
+	    height: 100%;
+	    background-color: #ababab;
+	    z-index: 1001;
+	    -moz-opacity: 0.8;
+	    opacity: .70;
+	    filter: alpha(opacity=80);
+}
+
+#modal {
+    display: none;
+    position: absolute;
+    top: 45%;
+    left: 45%;
+    width: 100px;
+    height: 100px;
+    padding:30px 15px 0px;
+    border: 3px solid #ababab;
+    box-shadow:1px 1px 10px #ababab;
+    border-radius:0px;
+    background-color: rgba( 255, 255, 255, .8 );
+    z-index: 1002;
+    text-align:center;
+    overflow: auto;
+}
+
+  </style>
+  
+   <script>
+   	 $(document).ready(function() {    
+   	 	$body = $("body");
+   	 
+   	 	$(document).bind({
+   	 		ajaxStart: function() {
+   	 		 	openModal();   
+   	 		 },
+     		ajaxStop: function() {
+     			 closeModal();
+     		 } 
+   	   });
+       
+       	 
+       $("#statusWrapper").hide();
+     });
+   			
+  	function doAjaxLoad(url, eleIdToLoad, eleIdForStatus, msg)
+	{	
+		$("#statusWrapper").hide();			
+		$('#' + eleIdToLoad).load(url, function(response,status, xhr)
+			{
+   				$("#ajax_response").html("Status : " + xhr.status + "  " + xhr.statusText);
+   				
+   				if(status !='error'){
+  					$("#statusWrapper").show();
+  				}
+  			}
+  		);
+  	}			
+   	
+   
+   function doAjaxGet(requestedUrl, params, notifyEle, toggleEle, callback ){
+        var request =  $.ajax({
+            url: requestedUrl,
+            type: 'get',   
+            data: params,
+            complete: function(jqXHR, textStatus)
+            {
+            	callback(jqXHR.status, toggleEle);
+            }
+         });
+         
+         request.done(function(msg, jqXHR, textStatus){
+         	$('#' + notifyEle).html("Filter Status : " + msg);
+         });
+         
+          request.fail(function(jqXHR, textStatus){
+         	alert('Filter failed : ' + textStatus);
+         });
+      
+      }
+   
+   
+   	
+   	function toggleFilter(toggleEle){
+   		var url = '/serviceTester/toggleFilter';
+   		var data;
+   		if(toggleEle.value == "Filter Off"){
+   			data = {"filter_status" : "true"};
+   		}else{
+   			data = {"filter_status" : "false"};
+   		}
+   		
+   		doAjaxGet(url, data, 'filter_status', toggleEle, 
+   			function(status, ele)
+   			{
+   				if(status == 200){
+   					if(ele.value == "Filter Off"){
+   						ele.value = "Filter On";
+   						ele.className = "btn btn-info";
+   					}else{
+   						ele.value = "Filter Off"
+   						ele.className = "btn btn-primary";
+   					}
+   				}
+   			}
+   		);
+   		
+   	
+   	}
+   	
+ 
+   	function openModal()
+	{	
+		$("#modal").show();	
+  		$("#fade").show();
+  	}			
+   		
+   	function closeModal()
+	{	
+		$("#modal").hide();	
+  		$("#fade").hide();
+  	}			
+  </script>
+  
+</head>
+
+<body>
+	<div layout:fragment="content">
+					
+					
+						
+	                	<div class="btn-group">
+	                		<div class="pull-left" th:switch="${filter_status}">
+	                			<input type="button" id="sendTestsbtn" class="btn btn-primary" onclick="doAjaxLoad('/serviceTester/triggerTests', 'statusWrapper', 'ajax_response')" value="Send Tests"/>
+	                			
+	                			<input type="button" id="exportTestsbtn" class="btn btn-primary" onclick="doAjaxLoad('/serviceTester/exportToExcel', 'statusWrapper', 'ajax_response')" value="Export Loaded Scenarios"/>
+	                			                			
+	                			<input type="button" id="reloadbtn" class="btn btn-primary" onclick="doAjaxLoad('/serviceTester/reloadTests','reload_frag', 'ajax_response')" value="Reload Scenarios"/>
+	                		
+	                			<!-- th:case on filter value in conversations scope -->
+	                			<input type="button" th:case='false' id="filterTogglebtn" class="btn btn-primary" onclick="toggleFilter(this)" value="Filter Off"/>
+	                			<input type="button" th:case='true' id="filterTogglebtn" class="btn btn-info" onclick="toggleFilter(this)" value="Filter On"/>
+	                			
+	                			
+	                			
+	                			
+	                		</div>
+	         			</div>
+	         			
+	                	<div id="reload_frag" th:fragment="reload_frag">
+	                	<div id="ajax_response" class="alert-info"></div>
+	                	<div id="statusWrapper" style="display:none">
+							<div id="testInfo" th:fragment="test_response">
+	                			<p class="bg-info" th:text="${response}"/>
+	                		</div> 
+	                	</div>
+	  		 	 		<div class="row">
+	  		 	 			
+	               				<table class="table table-striped">
+	               					<thead>
+	               						<tr>
+	               							<th style="width:50%;" th:text=" 'Loaded Scenarios :' + ${mipScenarios.size()}"></th>
+	               						</tr>
+	               					</thead>
+							
+	               					<tbody>
+	               							<tr th:each="scenario : ${mipScenarios}">
+	               								<td>
+	        										<a href="#"
+	          										th:href="@{scenarioDetails.htm(scenarioId=${scenario.scenarioId})}"
+	          										th:text="${scenario.desc}|">Scenario Description</a>
+	      										</td>
+	               							</tr>
+	               					</tbody>
+	               				</table>
+	               				
+	               				<div id="filter_status" style="display:none">
+	               					<p th:text="${filter_status}"/>
+	               				</div>
+	        				
+	                		
+	                	</div>
+                	</div>
+                	<div id="fade"></div>
+                	<div id="modal">
+  						<img th:src="@{/img/loader.gif}" id="loader"/>
+  					</div>	
+  </div>
+</body>
+</html>

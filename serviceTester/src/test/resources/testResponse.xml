@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Response>
+   <MIPCalculation871>
+      <errorNode>
+         <errorCode actualHostCode="8711">0</errorCode>
+         <errorMsg/>
+         <errorSev/>
+         <errorSource>ENQS</errorSource>
+      </errorNode>
+      <CommonFields>
+         <forwardScroll/>
+         <backwardScroll/>
+      </CommonFields>
+      <Fields>
+         <Field name="DBKNSC">
+            <Value>933384</Value>
+         </Field>
+         <Field name="DBKACN">
+            <Value>12345678</Value>
+         </Field>
+         <Field name="MO_GEN_TOTAL_MTHLY_SALARY_APPT_1">
+            <Value>0</Value>
+         </Field>
+         <Field name="MO_GEN_TOTAL_MTHLY_SALARY_APPT_2">
+            <Value>0</Value>
+         </Field>
+      </Fields>
+   </MIPCalculation871>
+</Response>

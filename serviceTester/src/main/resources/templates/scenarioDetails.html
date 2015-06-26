@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+layout:decorator="layout">
+  <head>
+    <title>Service Tester</title>
+    <link rel="stylesheet"
+      th:href="@{/css/bootstrap.min.css}"
+      href="../../css/bootstrap.min.css"/>
+
+
+    <style type="text/css">
+      .bs-example{
+        margin: 20px;
+        width:60%;
+      }
+      
+      .textarea-style{
+        width: 90%;
+        max-width :95%;
+        margin: 10px;
+      }
+      
+      .overflow-description_break_word {
+    	word-wrap:break-word;
+    	display: block;
+    	color: #3c763d;
+  		background-color: #dff0d8;
+  		border-color: #d6e9c6;
+	}
+  </style>
+  
+   <script src="//code.jquery.com/jquery-1.10.2.js"></script>  
+</head>
+
+<body>
+	<div layout:fragment="content">
+					              	
+                	<div class="btn-group">
+                		<div class="pull-left">
+                			<a class="btn btn-primary" href="/serviceTester">Home</a>     			
+                		</div>
+         			</div>
+                	<br></br><br></br>
+  		 	 		<div class="panel panel-default">
+  		 	 			<div class="panel-body table-responsive">
+		  		 	 		<table class="table table-bordered table-condensed f11">
+		  		 	 				<tr>
+		               					<td style="width:45%;">Input</td>
+		               					<td style="width:45%;">Output</td>
+		               				</tr>
+		  		 	 				<tr>
+		  		 	 					<td>
+		  		 	 						<table class="table table-striped">
+		  		 	 							<tbody>
+		  		 	 									<tr th:each="entry : ${selectedScenario.scenarioInput}">
+		  		 	 									
+		  		 	 										<td th:text="${entry.key}"></td>
+		  		 	 										<td th:text="${entry.value}"></td>
+		  		 	 									</tr>
+		  		 	 							</tbody>
+		  		 	 						</table>
+		  		 	 					
+		  		 	 					</td>
+		  		 	 					
+		  		 	 					<td>
+		  		 	 						<table class="table table-striped">
+		  		 	 							<tbody>
+		  		 	 									<tr th:each="entry : ${selectedScenario.scenarioOutput}">
+		  		 	 									
+		  		 	 										<td th:text="${entry.key}"></td>
+		  		 	 										<td th:text="${entry.value}"></td>
+		  		 	 									</tr>
+		  		 	 							</tbody>
+		  		 	 						</table>
+		  		 	 					
+		  		 	 					</td>
+		  		 	 				</tr>
+		  		 	 			
+		  		 	 		</table>
+		  		 	 	</div>
+  		 	 		</div>
+  			
+  </div>
+</body>
+</html>
