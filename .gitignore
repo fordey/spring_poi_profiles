@@ -5,3 +5,4 @@ bower_components
 .ignore
 .settings
 target
+data
